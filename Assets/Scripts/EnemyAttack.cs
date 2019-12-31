@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAttack : MonoBehaviour
+public class EnemyAttack : MonoBehaviour
 {
-
-
     private float skillRate = 0.5f;
     float nextSkillTime;
 
@@ -22,12 +20,8 @@ public class PlayerAttack : MonoBehaviour
     {
         bool canCast = Time.time >= nextSkillTime;
 
-
-        if (Input.GetKey(KeyCode.Space) && canCast)
+        if(canCast)
             Attack();
-
-        if (Input.GetKey(KeyCode.X) && canCast)
-            Block();
     }
 
     void Attack()
@@ -35,14 +29,15 @@ public class PlayerAttack : MonoBehaviour
 
         ResetCastTime();
 
-        SoundManager.PlaySound("attack");
-        playerAnim.SetTrigger("Attack");
-
         Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(attackPos.position, attackRange, enemies);
 
         foreach (Collider2D enemy in enemiesToDamage)
         {
-            enemy.GetComponent<Enemy>().TakeDamage(20);
+
+            SoundManager.PlaySound("attack");
+            playerAnim.SetTrigger("Attack");
+
+            enemy.GetComponent<Player>().TakeDamage(20);
             mainCamera.GetComponent<ShakeBehavior>().TriggerShake();
         }
 

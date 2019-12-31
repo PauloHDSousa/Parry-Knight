@@ -4,19 +4,21 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public int health;
+
     private Rigidbody2D myRigidBody;
-    private Animator myAnimator;
+    private Animator anim;
 
     [SerializeField]
     private float movSpeed;
 
-    private bool isFacingRight;
+    private bool isFacingRight = true;
+    public GameObject bloodEffect;
 
-    // Start is called before the first frame update
     void Start()
     {
         myRigidBody = GetComponent<Rigidbody2D>();
-        myAnimator = GetComponent<Animator>();
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -29,12 +31,15 @@ public class Player : MonoBehaviour
 
     private void HandleMovement(float horizontal)
     {
-        Debug.Log(horizontal);
-
         myRigidBody.velocity = new Vector2(horizontal * movSpeed, myRigidBody.velocity.y);
-        myAnimator.SetFloat("speed", Mathf.Abs(horizontal));
+        anim.SetFloat("speed", Mathf.Abs(horizontal));
         Flip(horizontal);
+    }
 
+    public void TakeDamage(int damage)
+    {
+        anim.SetTrigger("Hurt");
+        health -= damage;
     }
 
     private void Flip(float horizontal)
@@ -45,6 +50,5 @@ public class Player : MonoBehaviour
             playerScale.x *= -1;
             transform.localScale = playerScale;
         }
-
     }
 }
